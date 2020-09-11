@@ -17,3 +17,18 @@ Current thoughts on tables:
 	Games
 	Teams
 	Experience
+
+Currently leaning towards a key-value database. Would love
+to work with a team of three. 
+
+As far as Business, for now, this is a project for class but
+if we create something we think could be a lot of fun and 
+bring people together, then this could become something more.
+We'll look for opportunities to grow this into something more.
+
+Legal: We plan to not violate any copyright laws.
+
+Technical: Front end will be developed in Flutter in order
+to get experience and also to develop for all platforms. Back
+end is open to discussion. C# or Java would be preferred but 
+this is open for discussion.
