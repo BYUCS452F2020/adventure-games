@@ -1,6 +1,6 @@
 Collin Clark
 
 I am interested in this project because I enjoyed this game in high school and think that this is a great way to make the organization of the game easier, faster, and more efficient.
-I feel like I would be a good contributer because I have some experience in app development, and would be able to quickly produce a front-end, or at least help produce a front-end quickly, so that we can put most of our focus on the back-end of the project.
+I feel like I would be a good contributor because I have some experience in app development, and would be able to quickly produce a front-end, or at least help produce a front-end quickly, so that we can put most of our focus on the back-end of the project.
 I think this would be an exciting app to develop and potentially put into production on public app platforms such as Apple's App Store or the Google Play Store.
 I would also be interested in gaining experience in flutter or C#, neither of which I have used before.
