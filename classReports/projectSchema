@@ -1,0 +1,46 @@
+Project Schema
+
+User (UserId, FirstName, LastName, BirthDate, Email, Password,  XpId)
+	Primary Key - UserId
+    Foreign Key XpId references Experience
+
+Column Names - User Table
+    UserId - Primary Key. Used to identify user.
+    FirstName - FirstName of user.
+    LastName - LastName of user.
+    BirthDate - Birth date of user.
+    Email - Email of user.
+    Password - A stored password to enable user to be able to log in to their account.
+    XpId - Foreign Key. Used to keep track of players total running experience.
+
+Player (PlayerId, UserId, GameId, Kills, Status)
+	Primary Key - PlayerId
+	ForeignKey UserId references Users
+    Foreign Key GameId references Game
+
+Column Names - Player Table
+    PlayerId - Primary Key. Used to identify player.
+    UserId - Foreign Key. Used to identify which user this player is.
+    GameId - Foreign Key. Used to identify which game the player is currently playing in.
+    Kills - Number of other players this player has killed.
+    Status - Current status of player. Whether they are still alive or have been killed.
+
+Game (GameId, Location, StartTime, InitialPlayerCount, PlayersRemainingCount, Code)
+	Primary Key - GameId
+
+Column Names - Game Table
+    GameId - Primary Key. Used to identify game.
+    Location - General area of game. 
+    StartTime - When the game will begin and kills are allowed.
+    InitialPlayerCount - Initial number of players in the select game
+    PlayersRemainingCount - Players still alive
+    Code - Randomly generated 6 digit code used to find and add a player to a game
+
+Experience (XpId, Wins, RoundsPlayed, Kills)
+	Primary Key - XpId
+
+Column Names - Experience Table
+    XpId - Primary Key. Used to identify specific stats for a player. 
+    Wins - Amount of total wins a player has across all played games. 
+    Kills - Amount of total kills a player has across all played games.
+    
