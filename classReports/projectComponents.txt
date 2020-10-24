@@ -1,0 +1,39 @@
+Pages:
+
+  User dashboard
+    getExperience(userId)
+    getGames(userId)
+        Return a list of all the games that the userId is a player in. (Only where the player’s status is still alive/true)
+    startNewGame()
+        Returns set up screen to set up new game.
+    joinGame(code)
+
+  Game dashboard
+    leaveGame(userId)
+        Kills player
+    getCurrentGame(gameId)
+        Returns the game
+    getPlayersRemaining(gameId)
+        Returns the amount of players still alive in the game.
+    getPlayer(userId, gameId)
+        Returns player object for the current user and game
+    getPlayerKills(playerId)
+        Returns the amount of kills the player has performed.
+    getNextTarget(playerId)
+        Returns the necessary info of the player’s next target.
+
+  Login screen
+    login(username, password)
+        Returns boolean if username and password are valid and  a message string (if user already exists: “Username is taken” if password is invalid: “Wrong password”)
+
+  Register screen
+    register(firstName, lastName, email, birthdate, username, password)
+        Returns boolean if user is created and added to database successfully and a message string
+
+
+  Setup screen
+    setUpGame(location, startTime)
+        Creates a new game in the database which is joinable for other players.
+        Returns a randomly generated code to allow other players to find and join the game. 
+
+  Settings
