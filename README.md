@@ -3,7 +3,7 @@ An app to host and manage games.
 
 Adventure Games
 
-We will be developping an app which will handle input and 
+We will be developing an app which will handle input and 
 basic management of common games played, many of which are
 common in high school. Games such as Assassin and Pandemic 
 are among the ones we want to start with. Players would be
@@ -32,3 +32,8 @@ Technical: Front end will be developed in Flutter in order
 to get experience and also to develop for all platforms. Back
 end is open to discussion. C# or Java would be preferred but 
 this is open for discussion.
+
+Team: 
+	Brennah Oaks (Flutter Specialist)
+	Collin Clark (Database Admin)
+	Tanner Young (The help)
