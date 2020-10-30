@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/GameDashboard.dart';
 import 'main.dart';
-import 'Classes/user.dart';
-import 'Classes/game.dart';
+import 'Model/Player.dart';
+import 'Model/User.dart';
+import 'Model/Game.dart';
+import 'Request/GameRequest.dart';
+import 'Result/PlayerResult.dart';
+import 'ServerFacade/ServerFacade.dart';
 
-class joinGame extends StatefulWidget {
-  joinGame({Key key, this.currUser}) : super(key: key);
-  final user currUser;
+class CreateGame extends StatefulWidget {
+  CreateGame({Key key, this.currUser}) : super(key: key);
+  final User currUser;
   @override
-  _joinGameState createState() => _joinGameState();
+  _CreateGameState createState() => _CreateGameState();
 }
 
-class _joinGameState extends State<joinGame> {
-  TextEditingController gameIdController = TextEditingController();
-  TextEditingController codeController = TextEditingController();
+class _CreateGameState extends State<CreateGame> {
+  TextEditingController locationController = TextEditingController();
   bool buttonEnabled;
 
   @override
@@ -31,11 +35,10 @@ class _joinGameState extends State<joinGame> {
 
 
   void checkButtonEnabled() {
-    String text1,text2;
+    String text1;
 
-    text1 = gameIdController.text ;
-    text2 = codeController.text ;
-    if(text1 == '' || text2 == '')
+    text1 = locationController.text ;
+    if(text1 == '')
     {
       print('Text Field is empty, Please Fill All Data');
     }else{
@@ -47,9 +50,24 @@ class _joinGameState extends State<joinGame> {
 
 
 
-  void _join() {
-    print(gameIdController.text);
-    print(codeController.text);
+  void _create() async {
+    print(locationController.text);
+
+    GameRequest request = new GameRequest(widget.currUser.userId, locationController.text);
+    PlayerResult result = await new ServerFacade().createGame(request);
+
+    if (!result.success) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text(result.message),
+      ));
+      return;
+    }
+    Player currPlayer = result.player;
+    final route = MaterialPageRoute(
+      builder: (context) =>
+          GameDashboard(currPlayer: currPlayer),
+    );
+    Navigator.push(context, route);
   }
 
   @override
@@ -66,7 +84,7 @@ class _joinGameState extends State<joinGame> {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Join Game',
+                      'Create Game',
                       style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.w500,
@@ -75,26 +93,13 @@ class _joinGameState extends State<joinGame> {
                 Container(
                   padding: EdgeInsets.all(10),
                   child: TextField(
-                    controller: gameIdController,
+                    controller: locationController,
                     onChanged: (val) {
                       checkButtonEnabled();
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Game Id',
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: EdgeInsets.all(10),
-                  child: TextField(
-                    controller: codeController,
-                    onChanged: (val) {
-                      checkButtonEnabled();
-                    },
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Code',
+                      labelText: 'Location',
                     ),
                   ),
                 ),
@@ -104,8 +109,8 @@ class _joinGameState extends State<joinGame> {
                     child: RaisedButton(
                       textColor: Colors.white,
                       color: Colors.blue,
-                      child: Text('Join'),
-                      onPressed: checkButtonVar() ? () => _join() : null,
+                      child: Text('Create'),
+                      onPressed: checkButtonVar() ? () => _create() : null,
                     )),
               ],
             )));

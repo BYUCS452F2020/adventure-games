@@ -2,6 +2,8 @@ package Handler;
 
 import Request.GameRequest;
 import Result.GameResult;
+import Result.PlayerResult;
+import Result.Result;
 import Service.GameService;
 import com.sun.net.httpserver.HttpExchange;
 
@@ -21,11 +23,6 @@ public class GameHandler extends RequestHandler {
         String urlPath = exchange.getRequestURI().toString();
         int gameId = Integer.parseInt(urlPath.substring(urlPath.lastIndexOf('/') + 1));
         result = GameService.getGame(gameId);
-      } else if (exchange.getRequestMethod().toUpperCase().equals("POST")) {
-        InputStream reqBody = exchange.getRequestBody();
-        String reqData = readString(reqBody);
-        GameRequest gameRequest = JsonHandler.deserialize(reqData, GameRequest.class);
-        result = GameService.setupGame(gameRequest);
       } else {
         message = "{ \"message\": \"error: bad request\" }";
         result = new GameResult(false, message);

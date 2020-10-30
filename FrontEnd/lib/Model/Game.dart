@@ -1,5 +1,5 @@
 
-class game {
+class Game {
 
   int gameId;
   int hostId;

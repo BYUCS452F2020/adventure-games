@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/gameDashboard.dart';
 import 'main.dart';
-import 'Classes/user.dart';
-import 'Classes/game.dart';
+import 'Model/User.dart';
+import 'Model/Game.dart';
 
-class createGame extends StatefulWidget {
-  createGame({Key key, this.currUser}) : super(key: key);
-  final user currUser;
+class JoinGame extends StatefulWidget {
+  JoinGame({Key key, this.currUser}) : super(key: key);
+  final User currUser;
   @override
-  _createGameState createState() => _createGameState();
+  _JoinGameState createState() => _JoinGameState();
 }
 
-class _createGameState extends State<createGame> {
-  TextEditingController locationController = TextEditingController();
+class _JoinGameState extends State<JoinGame> {
+  TextEditingController gameIdController = TextEditingController();
+  TextEditingController codeController = TextEditingController();
   bool buttonEnabled;
 
   @override
@@ -31,10 +31,11 @@ class _createGameState extends State<createGame> {
 
 
   void checkButtonEnabled() {
-    String text1;
+    String text1,text2;
 
-    text1 = locationController.text ;
-    if(text1 == '')
+    text1 = gameIdController.text ;
+    text2 = codeController.text ;
+    if(text1 == '' || text2 == '')
     {
       print('Text Field is empty, Please Fill All Data');
     }else{
@@ -46,25 +47,9 @@ class _createGameState extends State<createGame> {
 
 
 
-  void _create() {
-    print(locationController.text);
-
-    GameRequest request = new GameRequest(widget.currUser.userId, locationController.text);
-    PlayerResult result = ServerFacade().createGame(request);
-
-    if (!result.isSuccess()) {
-      Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(result.getMessage),
-      ));
-      return;
-    }
-    game currGame = result.getPlayer();
-    final route = MaterialPageRoute(
-      builder: (context) =>
-          gameDashboard(currPlayer: currPlayer),
-    );
-    Navigator.push(context, route);
-  }
+  void _join() {
+    print(gameIdController.text);
+    print(codeController.text);
   }
 
   @override
@@ -81,7 +66,7 @@ class _createGameState extends State<createGame> {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Create Game',
+                      'Join Game',
                       style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.w500,
@@ -90,13 +75,26 @@ class _createGameState extends State<createGame> {
                 Container(
                   padding: EdgeInsets.all(10),
                   child: TextField(
-                    controller: locationController,
+                    controller: gameIdController,
                     onChanged: (val) {
                       checkButtonEnabled();
                     },
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),
-                      labelText: 'Location',
+                      labelText: 'Game Id',
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: codeController,
+                    onChanged: (val) {
+                      checkButtonEnabled();
+                    },
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Code',
                     ),
                   ),
                 ),
@@ -106,8 +104,8 @@ class _createGameState extends State<createGame> {
                     child: RaisedButton(
                       textColor: Colors.white,
                       color: Colors.blue,
-                      child: Text('Create'),
-                      onPressed: checkButtonVar() ? () => _create() : null,
+                      child: Text('Join'),
+                      onPressed: checkButtonVar() ? () => _join() : null,
                     )),
               ],
             )));

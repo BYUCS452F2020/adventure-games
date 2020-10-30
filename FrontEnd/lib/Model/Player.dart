@@ -1,5 +1,5 @@
 
-class player {
+class Player {
 
   String playerId;
   String userId;

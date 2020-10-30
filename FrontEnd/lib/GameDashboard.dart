@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
-import 'Classes/user.dart';
-import 'Classes/game.dart';
-import 'Classes/player.dart';
+import 'package:flutter_app/Result/GameResult.dart';
+import 'Model/User.dart';
+import 'Model/Game.dart';
+import 'Model/Player.dart';
+import 'ServerFacade/ServerFacade.dart';
 
-class gameDashboard extends StatefulWidget {
-  gameDashboard({Key key, this.currPlayer}) : super(key: key);
-  final player currPlayer;
+class GameDashboard extends StatefulWidget {
+  GameDashboard({Key key, this.currPlayer}) : super(key: key);
+  final Player currPlayer;
   @override
-  _gameDashboardState createState() => _gameDashboardState();
+  _GameDashboardState createState() => _GameDashboardState();
 }
 
-class _gameDashboardState extends State<gameDashboard> {
-  game currGame;
+class _GameDashboardState extends State<GameDashboard> {
+  Game currGame;
 
   @override
   void initState(){
@@ -20,7 +22,9 @@ class _gameDashboardState extends State<gameDashboard> {
   }
 
   void init() async {
-    currGame = await ServerFacade().getGame(widget.currPlayer.gameId);
+    GameResult result = await new ServerFacade().getGame(widget.currPlayer.gameId);
+
+
   }
 
   void _killTarget() {

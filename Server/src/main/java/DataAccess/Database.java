@@ -125,19 +125,7 @@ public class Database {
 
   public void createDefaultUser() throws DataAccessException {
     try (Statement stmt = conn.createStatement()) {
-      String sql;
-//      sql = "INSERT IGNORE INTO experience (userId, wins, kills) VALUES ('TestUser1', 0, 0);";
-//      stmt.executeUpdate(sql);
-
-      sql = "SELECT id FROM experience WHERE userId='TestUser1';";
-      ResultSet rs = stmt.executeQuery(sql);
-
-      int xpId = 0;
-      if (rs.next()) {
-        xpId = rs.getInt("id");
-      }
-
-      sql = "INSERT IGNORE INTO users (username, password, firstName, lastName, xpId) VALUES ('TestUser1', 'password', 'Test', 'User', '" + xpId + "');";
+      String sql = "INSERT IGNORE INTO users (username, password, firstName, lastName, kills, wins) VALUES ('TestUser1', 'password', 'Test', 'User', 0, 0);";
       stmt.executeUpdate(sql);
 
     } catch (SQLException e) {

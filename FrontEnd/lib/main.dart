@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'signIn.dart';
-import 'Classes/user.dart';
-import 'userDashboard.dart';
+import 'Request/LoginRequest.dart';
+import 'Result/UserResult.dart';
+import 'ServerFacade/ServerFacade.dart';
+import 'SignIn.dart';
+import 'Model/User.dart';
+import 'UserDashboard.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -38,18 +41,18 @@ class _loginState extends State<login> {
     print(passwordController.text);
 
     LoginRequest request = new LoginRequest(nameController.text, passwordController.text);
-    UserResult result = await ServerFacade().login(request);
+    UserResult result = await new ServerFacade().login(request);
 
-    if (!result.isSuccess()) {
+    if (!result.success) {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(result.getMessage),
+        content: Text(result.message),
       ));
       return;
     }
-    user currentUser = result.getUser();
+    User currentUser = result.user;
     final route = MaterialPageRoute(
       builder: (context) =>
-          userDashboard(currentUser: currentUser),
+          UserDashboard(currentUser: currentUser),
     );
     Navigator.push(context, route);
   }
@@ -72,7 +75,7 @@ class _loginState extends State<login> {
   void _signIn() {
     final route = MaterialPageRoute(
       builder: (context) =>
-          signIn(),
+          SignIn(),
     );
     Navigator.push(context, route);
   }

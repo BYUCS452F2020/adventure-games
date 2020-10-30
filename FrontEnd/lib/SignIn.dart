@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_app/userDashboard.dart';
-import 'Classes/user.dart';
+import 'package:flutter_app/UserDashboard.dart';
+import 'Model/User.dart';
 import 'main.dart';
+import 'Request/LoginRequest.dart';
+import 'Request/RegisterRequest.dart';
+import 'Result/UserResult.dart';
+import 'ServerFacade/ServerFacade.dart';
 
-class signIn extends StatefulWidget {
+class SignIn extends StatefulWidget {
   @override
-  _signInState createState() => _signInState();
+  _SignInState createState() => _SignInState();
 }
 
-class _signInState extends State<signIn> {
+class _SignInState extends State<SignIn> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
@@ -29,25 +33,25 @@ class _signInState extends State<signIn> {
     return buttonEnabled;
   }
 
-  void _signIn() {
+  void _signIn() async {
     print(firstNameController.text);
     print(lastNameController.text);
     print(userNameController.text);
     print(passwordController.text);
 
-    RegisterRequest request = new LoginRequest(userNameController.text, passwordController.text, firstNameController.text, lastNameController.text);
-    UserResult result = await ServerFacade().register(request);
+    RegisterRequest request = new RegisterRequest(userNameController.text, passwordController.text, firstNameController.text, lastNameController.text);
+    UserResult result = await new ServerFacade().register(request);
 
-    if (!result.isSuccess()) {
+    if (!result.success) {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(result.getMessage),
+        content: Text(result.message),
       ));
       return;
     }
-    user currentUser = result.getUser();
+    User currentUser = result.user;
     final route = MaterialPageRoute(
       builder: (context) =>
-          userDashboard(currentUser: currentUser),
+          UserDashboard(currentUser: currentUser),
     );
     Navigator.push(context, route);
   }

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
-import 'Classes/user.dart';
-import 'Classes/game.dart';
-import 'Classes/player.dart';
-import 'gameDashboard.dart';
-import 'createGame.dart';
-import 'joinGame.dart';
+import 'Model/User.dart';
+import 'Model/Game.dart';
+import 'Model/Player.dart';
+import 'GameDashboard.dart';
+import 'CreateGame.dart';
+import 'JoinGame.dart';
+import 'Result/PlayersResult.dart';
+import 'ServerFacade/ServerFacade.dart';
 
-class userDashboard extends StatefulWidget {
-  userDashboard({Key key, this.currentUser}) : super(key: key);
-  final user currentUser;
+class UserDashboard extends StatefulWidget {
+  UserDashboard({Key key, this.currentUser}) : super(key: key);
+  final User currentUser;
   @override
-  _userDashboardState createState() => _userDashboardState();
+  _UserDashboardState createState() => _UserDashboardState();
 }
 
-class _userDashboardState extends State<userDashboard> {
-  List<player> playerList;
+class _UserDashboardState extends State<UserDashboard> {
+  List<Player> playerList;
   @override
   void initState(){
     super.initState();
@@ -22,25 +24,25 @@ class _userDashboardState extends State<userDashboard> {
   }
 
   void init() async {
-    playerList = getPlayers(widget.currentUser.userId);
+    playerList = getPlayers(widget.currentUser.userId) as List;
   }
 
-  List<player> getPlayers(String username) async {
-    PlayersResult result = await ServerFacade().getPlayers(widget.currentUser);
+  Future<List<Player>> getPlayers(String username) async {
+    PlayersResult result = await new ServerFacade().getPlayers(widget.currentUser.userId);
 
-    if (!result.isSuccess()) {
+    if (!result.success) {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text(result.getMessage),
+        content: Text(result.message),
       ));
       return null;
     }
-    return result.getData();
+    return result.players;
   }
 
-  void _gameDashboard(player currPlayer){
+  void _gameDashboard(Player currPlayer){
     final route = MaterialPageRoute(
       builder: (context) =>
-          gameDashboard(currPlayer: currPlayer),
+          GameDashboard(currPlayer: currPlayer),
     );
     Navigator.push(context, route);
   }
@@ -48,7 +50,7 @@ class _userDashboardState extends State<userDashboard> {
   void _createGame() async {
     final route = MaterialPageRoute(
       builder: (context) =>
-          createGame(currUser: widget.currentUser),
+          CreateGame(currUser: widget.currentUser),
     );
     Navigator.push(context, route);
   }
@@ -56,7 +58,7 @@ class _userDashboardState extends State<userDashboard> {
   void _joinGame(){
     final route = MaterialPageRoute(
       builder: (context) =>
-          joinGame(currUser: widget.currentUser),
+          JoinGame(currUser: widget.currentUser),
     );
     Navigator.push(context, route);
   }
