@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_app/Request/GameRequest.dart';
 import 'package:flutter_app/Request/JoinGameRequest.dart';
 import 'package:flutter_app/Request/LoginRequest.dart';
@@ -57,7 +59,14 @@ class ServerFacade {
     return null;
   }
 
-  Future<GameResult> getGame(int gameId) {
-    return null;
+  Future<GameResult> getGame(int gameId) async {
+    String url = "http://" + serverHost + ":" + serverPort + "/game/" + gameId.toString();
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      return GameResult.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Failed to load game');
+    }
   }
 }

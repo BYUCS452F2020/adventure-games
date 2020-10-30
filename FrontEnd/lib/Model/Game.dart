@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'Game.g.dart';
+
+@JsonSerializable()
 
 class Game {
 
@@ -10,14 +15,11 @@ class Game {
   String code;
   String winner;
 
-  void setGame(Map input){
-    gameId = input["gameId"];
-    hostId = input["hostId"];
-    location = input["location"];
-    startTime = input["startTime"];
-    initialPlayerCount = input["initialPlayerCount"];
-    playersRemainingCount = input["playersRemainingCount"];
-    code = input["code"];
-    winner = input["winner"];
-  }
+  Game(this.gameId, this.hostId, this.location, this.startTime,
+      this.initialPlayerCount, this.playersRemainingCount, this.code,
+      this.winner);
+
+  factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);
+
+  Map<String, dynamic> toJson() => _$GameToJson(this);
 }

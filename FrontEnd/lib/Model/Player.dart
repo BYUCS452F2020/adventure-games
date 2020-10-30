@@ -1,3 +1,8 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'Player.g.dart';
+
+@JsonSerializable()
 
 class Player {
 
@@ -8,12 +13,10 @@ class Player {
   int kills;
   bool status;
 
-  void setPlayer(Map input){
-    playerId = input["playerId"];
-    userId = input["userId"];
-    targetId = input["targetId"];
-    gameId = input["gameId"];
-    kills = input["kills"];
-    status = input["status"];
-  }
+  Player(this.playerId, this.userId, this.targetId, this.gameId, this.kills,
+      this.status);
+
+  factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);
+
+  Map<String, dynamic> toJson() => _$PlayerToJson(this);
 }
