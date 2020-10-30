@@ -68,7 +68,7 @@ public class PlayerService {
    * Gets gameId from game code
    * Generates player for that game and inserts it into the database
    */
-  public static GameResult joinGame(JoinGameRequest r) throws Exception {
+  public static PlayerResult joinGame(JoinGameRequest r) throws Exception {
     Database db = new Database();
     try {
       Connection conn = db.openConnection();
@@ -84,14 +84,15 @@ public class PlayerService {
 
       Player player = new Player(userId, game.getId());
       playerDao.insert(player);
+      player = playerDao.getOne(userId, game.getId());
 
       db.closeConnection(true);
 
-      return new GameResult(game);
+      return new PlayerResult(player);
     } catch (DataAccessException e) {
       e.printStackTrace();
       db.closeConnection(false);
-      return new GameResult(false, "error " + e.getMessage());
+      return new PlayerResult(false, "error " + e.getMessage());
     }
   }
 

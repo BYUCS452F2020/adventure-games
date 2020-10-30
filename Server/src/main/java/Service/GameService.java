@@ -5,6 +5,7 @@ import Model.Game;
 import Model.Player;
 import Request.GameRequest;
 import Result.GameResult;
+import Result.PlayerResult;
 
 import java.sql.Connection;
 
@@ -46,7 +47,7 @@ public class GameService {
    * Adds player that created it to game
    * Returns game object (including gameId and generated code)
    */
-  public static GameResult setupGame(GameRequest r) throws Exception {
+  public static PlayerResult setupGame(GameRequest r) throws Exception {
     Database db = new Database();
     try {
       Connection conn = db.openConnection();
@@ -69,15 +70,15 @@ public class GameService {
       gameDao.insert(game);
       Player player = new Player(userId, gameId);
       playerDao.insert(player);
-      game = gameDao.getOne(gameId);
+      player = new Player(playerId, userId, gameId);
 
       db.closeConnection(true);
 
-      return new GameResult(game);
+      return new PlayerResult(player);
     } catch (DataAccessException e) {
       e.printStackTrace();
       db.closeConnection(false);
-      return new GameResult(false, "error " + e.getMessage());
+      return new PlayerResult(false, "error " + e.getMessage());
     }
   }
 

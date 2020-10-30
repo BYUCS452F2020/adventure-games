@@ -39,7 +39,7 @@ public class Server {
     server.createContext("/leave_game/", new LeaveGameHandler());
     server.createContext("/join_game", new JoinGameHandler());
     server.createContext("/start_game/", new StartGameHandler());
-    server.createContext("/kill_player", new KillTargetHandler());
+    server.createContext("/kill_target/", new KillTargetHandler());
     server.createContext("/game", new GameHandler());
     server.createContext("/game/", new GameHandler());
   }

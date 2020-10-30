@@ -26,6 +26,15 @@ public class Player implements Serializable {
     this.status = true;
   }
 
+  public Player(int id, String userId, int gameId) {
+    this.id = id;
+    this.userId = userId;
+    this.gameId = gameId;
+    this.kills = 0;
+    this.targetId = null;
+    this.status = true;
+  }
+
   public Player(int id, String userId, int gameId, int kills, String targetId, boolean status) {
     this.id = id;
     this.userId = userId;
