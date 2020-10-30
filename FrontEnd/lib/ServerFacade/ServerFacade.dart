@@ -19,7 +19,22 @@ class ServerFacade {
     this.serverPort = "3000";
   }
 
-  Future<UserResult> login(LoginRequest r) {
+  Future<UserResult> login(LoginRequest r) async {
+    final http.Response response = await http.post(
+      "http://" + serverHost + ":" + serverPort + "/users/login",
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, LoginRequest>{
+        'loginRequest': r,
+      }),
+    );
+
+    if (response.statusCode == 201) {
+      //Return a UserResult object
+    } else {
+      throw Exception('Failed to login');
+    }
     return null;
   }
 
