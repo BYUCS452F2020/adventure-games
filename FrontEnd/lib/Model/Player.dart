@@ -6,14 +6,14 @@ part 'Player.g.dart';
 
 class Player {
 
-  int playerId;
+  int id;
   String userId;
   String targetId;
   int gameId;
   int kills;
   bool status;
 
-  Player(this.playerId, this.userId, this.targetId, this.gameId, this.kills,
+  Player(this.id, this.userId, this.targetId, this.gameId, this.kills,
       this.status);
 
   factory Player.fromJson(Map<String, dynamic> json) => _$PlayerFromJson(json);

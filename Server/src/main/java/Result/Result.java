@@ -3,7 +3,7 @@ package Result;
 public class Result {
 
   private String message;
-  private transient boolean success;
+  private boolean success;
 
   public Result(boolean success, String message) {
     this.success = success;

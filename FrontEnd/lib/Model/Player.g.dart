@@ -8,7 +8,7 @@ part of 'Player.dart';
 
 Player _$PlayerFromJson(Map<String, dynamic> json) {
   return Player(
-    json['playerId'] as int,
+    json['id'] as int,
     json['userId'] as String,
     json['targetId'] as String,
     json['gameId'] as int,
@@ -18,7 +18,7 @@ Player _$PlayerFromJson(Map<String, dynamic> json) {
 }
 
 Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
-      'playerId': instance.playerId,
+      'id': instance.id,
       'userId': instance.userId,
       'targetId': instance.targetId,
       'gameId': instance.gameId,

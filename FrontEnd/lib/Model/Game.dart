@@ -6,16 +6,16 @@ part 'Game.g.dart';
 
 class Game {
 
-  int gameId;
+  int id;
   int hostId;
   String location;
-  String startTime;
+  int startTime;
   int initialPlayerCount;
   int playersRemainingCount;
   String code;
   String winner;
 
-  Game(this.gameId, this.hostId, this.location, this.startTime,
+  Game(this.id, this.hostId, this.location, this.startTime,
       this.initialPlayerCount, this.playersRemainingCount, this.code,
       this.winner);
 

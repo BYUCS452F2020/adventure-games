@@ -25,13 +25,10 @@ class ServerFacade {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, LoginRequest>{
-        'loginRequest': r,
-      }),
+      body: jsonEncode(r),
     );
 
-    if (response.statusCode == 201) {
-      //Return a UserResult object
+    if (response.statusCode == 200) {
       return UserResult.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to login');
@@ -44,12 +41,10 @@ class ServerFacade {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, RegisterRequest>{
-        'registerRequest': r,
-      }),
+      body: jsonEncode(r),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return UserResult.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to login');
@@ -71,7 +66,7 @@ class ServerFacade {
     final response = await http.get("http://" +
         serverHost +
         ":" +
-        "serverPort" +
+        serverPort +
         "/player/" +
         playerId.toString());
 
@@ -84,7 +79,7 @@ class ServerFacade {
 
   Future<PlayersResult> getPlayers(String userId) async {
     final response = await http.get(
-        "http://" + serverHost + ":" + "serverPort" + "/players/" + userId);
+        "http://" + serverHost + ":" + serverPort + "/players/" + userId);
 
     if (response.statusCode == 200) {
       return PlayersResult.fromJson(jsonDecode(response.body));
@@ -99,12 +94,10 @@ class ServerFacade {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, JoinGameRequest>{
-        'joinGameRequest': r,
-      }),
+      body: jsonEncode(r),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return PlayerResult.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to join game');
@@ -113,11 +106,7 @@ class ServerFacade {
 
   Future<PlayerResult> leaveGame(int playerId) async {
     final response = await http.get("http://" +
-        serverHost +
-        ":" +
-        "serverPort" +
-        "/leave_game/" +
-        playerId.toString());
+        serverHost + ":" + serverPort + "/leave_game/" + playerId.toString());
 
     if (response.statusCode == 200) {
       return PlayerResult.fromJson(jsonDecode(response.body));
@@ -127,12 +116,7 @@ class ServerFacade {
   }
 
   Future<GameResult> startGame(int gameId) async {
-    final response = await http.get("http://" +
-        serverHost +
-        ":" +
-        "serverPort" +
-        "/start_game/" +
-        gameId.toString());
+    final response = await http.get("http://" + serverHost + ":" + serverPort + "/start_game/" + gameId.toString());
 
     if (response.statusCode == 200) {
       return GameResult.fromJson(jsonDecode(response.body));
@@ -142,12 +126,7 @@ class ServerFacade {
   }
 
   Future<PlayerResult> killTarget(int playerId) async {
-    final response = await http.get("http://" +
-        serverHost +
-        ":" +
-        "serverPort" +
-        "/kill_target/" +
-        playerId.toString());
+    final response = await http.get("http://" + serverHost + ":" + serverPort + "/kill_target/" + playerId.toString());
 
     if (response.statusCode == 200) {
       return PlayerResult.fromJson(jsonDecode(response.body));
@@ -162,12 +141,10 @@ class ServerFacade {
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
-      body: jsonEncode(<String, GameRequest>{
-        'gameRequest': r,
-      }),
+      body: jsonEncode(r),
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       return PlayerResult.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to create game');
@@ -178,7 +155,7 @@ class ServerFacade {
     final response = await http.get("http://" +
         serverHost +
         ":" +
-        "serverPort" +
+        serverPort +
         "/game/" +
         gameId.toString());
 

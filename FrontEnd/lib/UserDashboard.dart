@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/LoadingPage.dart';
 import 'Model/User.dart';
 import 'Model/Game.dart';
 import 'Model/Player.dart';
@@ -16,19 +17,23 @@ class UserDashboard extends StatefulWidget {
 }
 
 class _UserDashboardState extends State<UserDashboard> {
+  Widget _body = LoadingPage.loading();
   List<Player> playerList;
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
     init();
   }
 
   void init() async {
-    playerList = getPlayers(widget.currentUser.userId) as List;
+    playerList = await getPlayers(widget.currentUser.username);
+    setState(() => _body = userDashboardPage());
   }
 
   Future<List<Player>> getPlayers(String username) async {
-    PlayersResult result = await new ServerFacade().getPlayers(widget.currentUser.userId);
+    PlayersResult result = await new ServerFacade().getPlayers(
+        widget.currentUser.username);
 
     if (!result.success) {
       Scaffold.of(context).showSnackBar(SnackBar(
@@ -36,13 +41,16 @@ class _UserDashboardState extends State<UserDashboard> {
       ));
       return null;
     }
+    if (result.players == null) {
+      return new List();
+    }
     return result.players;
   }
 
-  void _gameDashboard(Player currPlayer){
+  void _gameDashboard(Player currPlayer) {
     final route = MaterialPageRoute(
       builder: (context) =>
-          GameDashboard(currPlayer: currPlayer),
+          GameDashboard(currPlayer: currPlayer, currUser: widget.currentUser),
     );
     Navigator.push(context, route);
   }
@@ -55,7 +63,7 @@ class _UserDashboardState extends State<UserDashboard> {
     Navigator.push(context, route);
   }
 
-  void _joinGame(){
+  void _joinGame() {
     final route = MaterialPageRoute(
       builder: (context) =>
           JoinGame(currUser: widget.currentUser),
@@ -66,6 +74,11 @@ class _UserDashboardState extends State<UserDashboard> {
 
   @override
   Widget build(BuildContext context) {
+    return _body;
+  }
+
+
+  Scaffold userDashboardPage() {
     return Scaffold(
         appBar: AppBar(
           title: Text('User Dashboard'),
@@ -78,7 +91,7 @@ class _UserDashboardState extends State<UserDashboard> {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(10),
                     child: Text(
-                      'Username: ${widget.currentUser.userId}',
+                      'Username: ${widget.currentUser.username}',
                       style: TextStyle(fontSize: 20),
                     )),
                 Container(

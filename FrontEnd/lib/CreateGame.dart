@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/GameDashboard.dart';
+import 'UserDashboard.dart';
 import 'main.dart';
 import 'Model/Player.dart';
 import 'Model/User.dart';
@@ -53,7 +54,7 @@ class _CreateGameState extends State<CreateGame> {
   void _create() async {
     print(locationController.text);
 
-    GameRequest request = new GameRequest(widget.currUser.userId, locationController.text);
+    GameRequest request = new GameRequest(widget.currUser.username, locationController.text);
     PlayerResult result = await new ServerFacade().createGame(request);
 
     if (!result.success) {
@@ -65,7 +66,15 @@ class _CreateGameState extends State<CreateGame> {
     Player currPlayer = result.player;
     final route = MaterialPageRoute(
       builder: (context) =>
-          GameDashboard(currPlayer: currPlayer),
+          GameDashboard(currPlayer: currPlayer, currUser: widget.currUser),
+    );
+    Navigator.push(context, route);
+  }
+
+  _home() {
+    final route = MaterialPageRoute(
+      builder: (context) =>
+          UserDashboard(currentUser: widget.currUser),
     );
     Navigator.push(context, route);
   }
@@ -75,6 +84,9 @@ class _CreateGameState extends State<CreateGame> {
     return Scaffold(
         appBar: AppBar(
           title: Text('Adventure Games'),
+          actions: [
+            IconButton(icon: Icon(Icons.home), onPressed: () => _home())
+          ],
         ),
         body: Padding(
             padding: EdgeInsets.all(10),

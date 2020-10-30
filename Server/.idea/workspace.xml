@@ -1,7 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="17a272cb-91d3-4dbc-8c0b-5e26b9450730" name="Default Changelist" comment="" />
+    <list default="true" id="17a272cb-91d3-4dbc-8c0b-5e26b9450730" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../FrontEnd/lib/LoadingPage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/CreateGame.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/CreateGame.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/GameDashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/GameDashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/Model/Game.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/Model/Game.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/Model/Game.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/Model/Game.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/Model/Player.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/Model/Player.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/Model/Player.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/Model/Player.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/Model/User.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/Model/User.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/Model/User.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/Model/User.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/ServerFacade/ServerFacade.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/ServerFacade/ServerFacade.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../FrontEnd/lib/UserDashboard.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../FrontEnd/lib/UserDashboard.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Result/Result.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Result/Result.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/META-INF/Server.kotlin_module" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Result/Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Result/Result.class" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -15,8 +34,14 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
   <component name="ProjectId" id="1jQN5nPYptqgzcOfA0ek1i8heKQ" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.17" />
     <property name="project.structure.side.proportion" value="0.2" />
@@ -44,7 +69,7 @@
   <component name="RunManager">
     <configuration name="Server" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="Server" />
-      <module name="Server" />
+      <module name="server" />
       <option name="PROGRAM_PARAMETERS" value="3000" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -68,5 +93,16 @@
       <updated>1603751448896</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
