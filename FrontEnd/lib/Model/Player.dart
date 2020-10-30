@@ -1,7 +1,7 @@
 
 class Player {
 
-  String playerId;
+  int playerId;
   String userId;
   String targetId;
   int gameId;
