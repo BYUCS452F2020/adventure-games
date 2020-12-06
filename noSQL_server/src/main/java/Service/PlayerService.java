@@ -15,26 +15,17 @@ public class PlayerService {
    * Returns player by playerId
    */
   public static PlayerResult getPlayer(int playerId) throws DataAccessException {
-    Database db = new Database();
     try {
-      Connection conn = db.openConnection();
-      db.createTables();
-      db.createDefaultUser();
-
-      PlayerDao playerDao = new PlayerDao(conn);
+      PlayerDao playerDao = new PlayerDao();
       Player player = playerDao.getOne(playerId);
 
       if (player == null) {
-        db.closeConnection(false);
-        return new PlayerResult(false, "no player data associated with id");
+        return new PlayerResult(false, "no player data associated with player id");
       }
-
-      db.closeConnection(true);
 
       return new PlayerResult(player);
     } catch (Exception e) {
       e.printStackTrace();
-      db.closeConnection(false);
       return new PlayerResult(false, "error " + e.getMessage());
     }
   }
@@ -43,21 +34,14 @@ public class PlayerService {
    * Returns all players associated with username
    */
   public static PlayersResult getPlayers(String username) throws Exception {
-    Database db = new Database();
     try {
-      Connection conn = db.openConnection();
-      db.createTables();
-
-      PlayerDao playerDao = new PlayerDao(conn);
+      PlayerDao playerDao = new PlayerDao();
       Player[] players = playerDao.getAll(username);
 
-      db.closeConnection(true);
-
       return new PlayersResult(players);
-    } catch (DataAccessException e) {
+    } catch (Exception e) {
       e.printStackTrace();
-      db.closeConnection(false);
-      return new PlayersResult(false, "error: " + e.getMessage());
+      return new PlayersResult(false, "error " + e.getMessage());
     }
   }
 
@@ -66,34 +50,30 @@ public class PlayerService {
    * Generates player for that game and inserts it into the database
    */
   public static PlayerResult joinGame(JoinGameRequest r) throws Exception {
-    Database db = new Database();
-    try {
-      Connection conn = db.openConnection();
-      db.createTables();
 
-      PlayerDao playerDao = new PlayerDao(conn);
-      GameDao gameDao = new GameDao(conn);
+    try {
+      PlayerDao playerDao = new PlayerDao();
+      GameDao gameDao = new GameDao();
 
       String userId = r.getUserId();
       String code = r.getCode();
 
       int gameId = gameDao.getGameIdByCode(code);
       Game game = gameDao.getOne(gameId);
+
       if (game.getStartTime() > 0) {
         return new PlayerResult(false, "Game has already started");
       }
+
       gameDao.playerJoined(gameId);
 
       Player player = new Player(userId, gameId);
       playerDao.insert(player);
       player = playerDao.getOne(userId, gameId);
 
-      db.closeConnection(true);
-
       return new PlayerResult(player);
-    } catch (DataAccessException e) {
+    } catch (Exception e) {
       e.printStackTrace();
-      db.closeConnection(false);
       return new PlayerResult(false, "error " + e.getMessage());
     }
   }
@@ -105,13 +85,9 @@ public class PlayerService {
    * If players are still in the game but player is dead, just deletes player
    */
   public static PlayerResult leaveGame(int playerId) throws Exception {
-    Database db = new Database();
     try {
-      Connection conn = db.openConnection();
-      db.createTables();
-
-      PlayerDao playerDao = new PlayerDao(conn);
-      GameDao gameDao = new GameDao(conn);
+      PlayerDao playerDao = new PlayerDao();
+      GameDao gameDao = new GameDao();
       Player player = playerDao.getOne(playerId);
       int gameId = player.getGameId();
 
@@ -129,25 +105,20 @@ public class PlayerService {
       }
 
       playerDao.delete(playerId);
-      db.closeConnection(true);
 
       return new PlayerResult(true, "Player left game");
-    } catch (DataAccessException e) {
+    } catch (Exception e) {
       e.printStackTrace();
-      db.closeConnection(false);
       return new PlayerResult(false, "error " + e.getMessage());
     }
   }
 
   public static PlayerResult killTarget(int playerId) throws Exception {
-    Database db = new Database();
     try {
-      Connection conn = db.openConnection();
-      db.createTables();
 
-      PlayerDao playerDao = new PlayerDao(conn);
+      PlayerDao playerDao = new PlayerDao();
       UserDao userDao = new UserDao();
-      GameDao gameDao = new GameDao(conn);
+      GameDao gameDao = new GameDao();
 
       Player player = playerDao.getOne(playerId);
       String userId = player.getUserId();
@@ -180,13 +151,9 @@ public class PlayerService {
       }
       playerDao.updateTarget(playerId, target.getUserId());
 
-
-      db.closeConnection(true);
-
       return new PlayerResult(true, "Killing player successful");
     } catch (DataAccessException e) {
       e.printStackTrace();
-      db.closeConnection(false);
       return new PlayerResult(false, "error " + e.getMessage());
     }
   }
