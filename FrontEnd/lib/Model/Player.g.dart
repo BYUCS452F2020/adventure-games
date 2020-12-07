@@ -8,12 +8,12 @@ part of 'Player.dart';
 
 Player _$PlayerFromJson(Map<String, dynamic> json) {
   return Player(
-    json['id'] as int,
+    json['id'] as String,
     json['userId'] as String,
     json['targetId'] as String,
-    json['gameId'] as int,
+    json['gameId'] as String,
     json['kills'] as int,
-    json['status'] as bool,
+    json['gameStatus'] as bool,
   );
 }
 
@@ -23,5 +23,5 @@ Map<String, dynamic> _$PlayerToJson(Player instance) => <String, dynamic>{
       'targetId': instance.targetId,
       'gameId': instance.gameId,
       'kills': instance.kills,
-      'status': instance.status,
+      'gameStatus': instance.gameStatus,
     };

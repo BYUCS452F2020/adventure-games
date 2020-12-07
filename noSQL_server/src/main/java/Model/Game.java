@@ -3,41 +3,42 @@ package Model;
 import java.io.Serializable;
 
 public class Game implements Serializable {
-  private int id;
-  private int hostId;
+  private String id;
+  private String hostId;
   private String location;
   private long startTime;
-  private int initialPlayerCount;
-  private int playersRemainingCount;
+  private String[] initialPlayers;
+  private String[] playersRemaining;
   private String code;
   private String winner;
 
-  public Game(String location, String code) {
-    this.hostId = 0;
+  public Game(String location, String code, String userId) {
+    this.id = code;
+    this.hostId = userId + "_" + code;
     this.location = location;
     this.startTime = 0;
-    this.initialPlayerCount = 1;
-    this.playersRemainingCount = 1;
+    this.initialPlayers = new String[] {userId + "_" + code};
+    this.playersRemaining = new String[] {userId + "_" + code};
     this.code = code;
-    this.winner = null;
+    this.winner = "";
   }
 
-  public Game(int id, int hostId, String location, long startTime, int initialPlayerCount, int playersRemainingCount, String code, String winner) {
+  public Game(String id, String hostId, String location, long startTime, String[] initialPlayers, String[] playersRemaining, String code, String winner) {
     this.id = id;
     this.hostId = hostId;
     this.location = location;
     this.startTime = startTime;
-    this.initialPlayerCount = initialPlayerCount;
-    this.playersRemainingCount = playersRemainingCount;
+    this.initialPlayers = initialPlayers;
+    this.playersRemaining = playersRemaining;
     this.code = code;
     this.winner = winner;
   }
 
-  public int getId() {
+  public String getId() {
     return id;
   }
 
-  public int getHostId() {
+  public String getHostId() {
     return hostId;
   }
 
@@ -49,12 +50,12 @@ public class Game implements Serializable {
     return startTime;
   }
 
-  public int getInitialPlayerCount() {
-    return initialPlayerCount;
+  public String[] getInitialPlayerCount() {
+    return initialPlayers;
   }
 
-  public int getPlayersRemainingCount() {
-    return playersRemainingCount;
+  public String[] getPlayersRemainingCount() {
+    return playersRemaining;
   }
 
   public String getCode() {

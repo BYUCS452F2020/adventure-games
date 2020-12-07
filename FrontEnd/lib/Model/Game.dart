@@ -6,17 +6,17 @@ part 'Game.g.dart';
 
 class Game {
 
-  int id;
-  int hostId;
+  String id;
+  String hostId;
   String location;
   int startTime;
-  int initialPlayerCount;
-  int playersRemainingCount;
+  List initialPlayers;
+  List playersRemaining;
   String code;
   String winner;
 
   Game(this.id, this.hostId, this.location, this.startTime,
-      this.initialPlayerCount, this.playersRemainingCount, this.code,
+      this.initialPlayers, this.playersRemaining, this.code,
       this.winner);
 
   factory Game.fromJson(Map<String, dynamic> json) => _$GameFromJson(json);

@@ -140,7 +140,7 @@ class _GameDashboardState extends State<GameDashboard> {
                         style: TextStyle(fontSize: 20),
                       )),
                 ]
-                else if (currGame.winner != null) ...[
+                else if (currGame.winner != "") ...[
                     Container(
                         alignment: Alignment.center,
                         padding: EdgeInsets.all(10),
@@ -175,7 +175,7 @@ class _GameDashboardState extends State<GameDashboard> {
                       alignment: Alignment.center,
                       padding: EdgeInsets.all(10),
                       child: Text(
-                        'Players Remaining: ${currGame.playersRemainingCount}',
+                        'Players Remaining: ${currGame.playersRemaining}',
                         style: TextStyle(fontSize: 20),
                       )),
                   Container(

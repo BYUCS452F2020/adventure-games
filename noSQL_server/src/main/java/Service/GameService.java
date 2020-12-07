@@ -1,7 +1,6 @@
 package Service;
 
 import DataAccess.DataAccessException;
-import DataAccess.Database;
 import DataAccess.GameDao;
 import DataAccess.PlayerDao;
 import Model.Game;
@@ -16,7 +15,7 @@ public class GameService {
   /**
    * Returns game by gameId
    */
-  public static GameResult getGame(int gameId) throws DataAccessException {
+  public static GameResult getGame(String gameId) throws DataAccessException {
     try {
 
       GameDao gameDao = new GameDao();
@@ -52,17 +51,16 @@ public class GameService {
       String location = r.getLocation();
 
       String code;
-      do {
-        code = getRandomCode();
-      } while (!gameDao.checkCodeAvailability(code));
-
-      Game game = new Game(location, code);
-      int gameId = gameDao.setupGame(game);
-      Player player = new Player(userId, gameId);
+ 
+      code = getRandomCode();
+      
+      Game game = new Game(location, code, userId);
+      gameDao.insert(game);
+      Player player = new Player(userId, code);
       playerDao.insert(player);
 
-      player = playerDao.getOne(userId, gameId);
-      gameDao.setHostId(gameId, player.getPlayerId());
+      player = playerDao.getOne(userId, code);
+      gameDao.setHostId(code, player.getPlayerId());
 
       return new PlayerResult(player);
     } catch (DataAccessException e) {
@@ -76,32 +74,29 @@ public class GameService {
    * Updates game with number of initial players and players remaining
    * Assigns each player a target
    */
-  public static GameResult startGame(int gameId) throws Exception {
-    Database db = new Database();
+  public static GameResult startGame(String gameId) throws Exception {
     try {
       GameDao gameDao = new GameDao();
       PlayerDao playerDao = new PlayerDao();
 
-      Player[] players = playerDao.getAllPlayersInGame(gameId);
-      Player player;
-      Player target;
+      String[] players = gameDao.getAllPlayersInGame(gameId);
+      String player;
+      String target;
       for (int i = 0; i < players.length - 1; i++) {
         player = players[i];
         target = players[i + 1];
-        playerDao.updateTarget(player.getPlayerId(), target.getUserId());
+        playerDao.updateTarget(player, target);
       }
       player = players[players.length - 1];
       target = players[0];
-      playerDao.updateTarget(player.getPlayerId(), target.getUserId());
+      playerDao.updateTarget(player, target);
 
-      gameDao.startGame(gameId, players.length);
+      gameDao.startGame(gameId, players);
 
-      db.closeConnection(true);
 
       return new GameResult(true, "Start game successful");
     } catch (DataAccessException e) {
       e.printStackTrace();
-      db.closeConnection(false);
       return new GameResult(false, "error " + e.getMessage());
     }
   }

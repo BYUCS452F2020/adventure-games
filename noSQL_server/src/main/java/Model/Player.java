@@ -3,48 +3,40 @@ package Model;
 import java.io.Serializable;
 
 public class Player implements Serializable {
-  private int id;
+  private String id;
   private String userId;
-  private int gameId;
+  private String gameId;
   private int kills;
   private String targetId;
-  private boolean status;
+  private boolean gameStatus;
 
   public Player(String userId) {
     this.userId = userId;
-    this.gameId = 0;
+    this.gameId = null;
     this.kills = 0;
     this.targetId = null;
-    this.status = true;
+    this.gameStatus = true;
   }
 
-  public Player(String userId, int gameId) {
+  public Player(String userId, String gameId) {
+    this.id = userId + "_" + gameId;
     this.userId = userId;
     this.gameId = gameId;
     this.kills = 0;
-    this.targetId = null;
-    this.status = true;
+    this.targetId = "";
+    this.gameStatus = true;
   }
 
-  public Player(int id, String userId, int gameId) {
-    this.id = id;
-    this.userId = userId;
-    this.gameId = gameId;
-    this.kills = 0;
-    this.targetId = null;
-    this.status = true;
-  }
-
-  public Player(int id, String userId, int gameId, int kills, String targetId, boolean status) {
+  public Player(String id, String userId, String gameId, int kills, String targetId, boolean gameStatus) {
     this.id = id;
     this.userId = userId;
     this.gameId = gameId;
     this.kills = kills;
     this.targetId = targetId;
-    this.status = status;
+    this.gameStatus = gameStatus;
   }
 
-  public int getPlayerId() {
+  public String getPlayerId() {
     return id;
   }
 
@@ -52,7 +44,7 @@ public class Player implements Serializable {
     return userId;
   }
 
-  public int getGameId() {
+  public String getGameId() {
     return gameId;
   }
 
@@ -65,10 +57,10 @@ public class Player implements Serializable {
   }
 
   public boolean getStatus() {
-    return status;
+    return gameStatus;
   }
 
-  public void setGameId(int gameId) {
+  public void setGameId(String gameId) {
     this.gameId = gameId;
   }
 }

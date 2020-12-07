@@ -115,7 +115,7 @@ class ServerFacade {
     }
   }
 
-  Future<GameResult> startGame(int gameId) async {
+  Future<GameResult> startGame(String gameId) async {
     final response = await http.get("http://" + serverHost + ":" + serverPort + "/start_game/" + gameId.toString());
 
     if (response.statusCode == 200) {
@@ -125,7 +125,7 @@ class ServerFacade {
     }
   }
 
-  Future<PlayerResult> killTarget(int playerId) async {
+  Future<PlayerResult> killTarget(String playerId) async {
     final response = await http.get("http://" + serverHost + ":" + serverPort + "/kill_target/" + playerId.toString());
 
     if (response.statusCode == 200) {
@@ -151,7 +151,7 @@ class ServerFacade {
     }
   }
 
-  Future<GameResult> getGame(int gameId) async {
+  Future<GameResult> getGame(String gameId) async {
     final response = await http.get("http://" +
         serverHost +
         ":" +

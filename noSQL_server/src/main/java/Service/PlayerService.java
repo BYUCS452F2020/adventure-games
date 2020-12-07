@@ -14,7 +14,7 @@ public class PlayerService {
   /**
    * Returns player by playerId
    */
-  public static PlayerResult getPlayer(int playerId) throws DataAccessException {
+  public static PlayerResult getPlayer(String playerId) throws DataAccessException {
     try {
       PlayerDao playerDao = new PlayerDao();
       Player player = playerDao.getOne(playerId);
@@ -58,18 +58,17 @@ public class PlayerService {
       String userId = r.getUserId();
       String code = r.getCode();
 
-      int gameId = gameDao.getGameIdByCode(code);
-      Game game = gameDao.getOne(gameId);
+      Game game = gameDao.getOne(code);
 
       if (game.getStartTime() > 0) {
         return new PlayerResult(false, "Game has already started");
       }
 
-      gameDao.playerJoined(gameId);
+      gameDao.playerJoined(code, userId + "_" + code);
 
-      Player player = new Player(userId, gameId);
+      Player player = new Player(userId, code);
       playerDao.insert(player);
-      player = playerDao.getOne(userId, gameId);
+      player = playerDao.getOne(userId, code);
 
       return new PlayerResult(player);
     } catch (Exception e) {
@@ -84,23 +83,23 @@ public class PlayerService {
    * If players are still in the game and player is alive, reassigns target and deletes player, adjusts game players remaining
    * If players are still in the game but player is dead, just deletes player
    */
-  public static PlayerResult leaveGame(int playerId) throws Exception {
+  public static PlayerResult leaveGame(String playerId) throws Exception {
     try {
       PlayerDao playerDao = new PlayerDao();
       GameDao gameDao = new GameDao();
       Player player = playerDao.getOne(playerId);
-      int gameId = player.getGameId();
+      String gameId = player.getGameId();
 
-      if (gameDao.getPlayersRemaining(gameId) == 1) {
+      if (gameDao.getPlayersRemaining(gameId).length == 1) {
         gameDao.delete(gameId);
       } else if (player.getStatus()) {
         Game game = gameDao.getOne(gameId);
         if (game.getStartTime() == 0) {
-          gameDao.playerLeftBeforeStart(gameId);
+          gameDao.playerLeftBeforeStart(gameId, playerId);
         } else {
           Player assassin = playerDao.getAssassin(player.getUserId(), gameId);
           playerDao.updateTarget(assassin.getPlayerId(), player.getTargetId());
-          gameDao.playerLeftAfterStart(gameId);
+          gameDao.playerLeftAfterStart(gameId, playerId);
         }
       }
 
@@ -113,7 +112,7 @@ public class PlayerService {
     }
   }
 
-  public static PlayerResult killTarget(int playerId) throws Exception {
+  public static PlayerResult killTarget(String playerId) throws Exception {
     try {
 
       PlayerDao playerDao = new PlayerDao();
@@ -122,8 +121,11 @@ public class PlayerService {
 
       Player player = playerDao.getOne(playerId);
       String userId = player.getUserId();
-      int gameId = player.getGameId();
-      Player target = playerDao.getTarget(player.getTargetId(), gameId);
+      String gameId = player.getGameId();
+      Player target = playerDao.getOne(player.getTargetId(), gameId);
+      if(target == null) {
+        target = playerDao.getOne(player.getTargetId());
+      }
 
       //sets target status to dead (false) and nullifies their targetId
       playerDao.killPlayer(target.getPlayerId());
@@ -131,9 +133,9 @@ public class PlayerService {
       playerDao.updateKills(playerId);
       userDao.updateKills(userId);
       //subtracts 1 from the game's players remaining
-      gameDao.playerKilled(gameId);
+      gameDao.playerKilled(gameId, target.getPlayerId());
 
-      if (gameDao.getPlayersRemaining(gameId) == 1) {
+      if (gameDao.getPlayersRemaining(gameId).length == 1) {
         userDao.updateWin(userId);
         gameDao.setWinner(gameId, userId);
         return new PlayerResult(true, "Killing player successful, game over");
@@ -141,12 +143,12 @@ public class PlayerService {
 
       //sets player's new target as target's old target
       String targetUsername = target.getTargetId();
-      target = playerDao.getTarget(targetUsername, gameId);
+      target = playerDao.getOne(targetUsername, gameId);
       boolean stillInGame = target.getStatus();
       //checks if new target is still alive, if not, assigns next target
       while (!stillInGame) {
         targetUsername = target.getTargetId();
-        target = playerDao.getTarget(targetUsername, gameId);
+        target = playerDao.getOne(targetUsername, gameId);
         stillInGame = target.getStatus();
       }
       playerDao.updateTarget(playerId, target.getUserId());

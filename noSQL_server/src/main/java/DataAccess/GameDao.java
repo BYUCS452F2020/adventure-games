@@ -7,14 +7,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.*;
+
+import Model.Player;
 import Model.User;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.Table;
-import com.amazonaws.services.dynamodbv2.document.UpdateItemOutcome;
+import com.amazonaws.services.dynamodbv2.document.*;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.model.ReturnValue;
@@ -27,8 +28,8 @@ public class GameDao {
   private static final String HostIdAttr = "hostId";
   private static final String LocationAttr = "location";
   private static final String StartTimeAttr = "startTime";
-  private static final String InitialPlayerAttr = "initialPlayerCount";
-  private static final String PlayersRemainingAttr = "playersRemainingCount";
+  private static final String InitialPlayerAttr = "initialPlayers";
+  private static final String PlayersRemainingAttr = "playersRemaining";
   private static final String CodeAttr = "code";
   private static final String WinnerAttr = "winner";
   
@@ -43,50 +44,44 @@ public class GameDao {
   private static Table table = dynamoDB.getTable(TableName);
 
 
-  public Game getOne(int gameId) throws DataAccessException {
+  public Game getOne(String gameId) throws DataAccessException {
     Item item = table.getItem(IdAttr, gameId);
 
     if (item != null) {
-      int id = item.getInt(IdAttr);
-      int hostId = item.getInt(HostIdAttr);
+      String id = item.getString(IdAttr);
+      String hostId = item.getString(HostIdAttr);
       String location = item.getString(LocationAttr);
       long startTime = item.getLong(StartTimeAttr);
-      int initialPlayerCount = item.getInt(InitialPlayerAttr);
-      int playersRemainingCount = item.getInt(PlayersRemainingAttr);
+      //String[] initialPlayersArray = new String[item.getList(InitialPlayerAttr).size()];
+      //String[] playersRemainingArray = new String[item.getList(PlayersRemainingAttr).size()];
+      List<String> initialPlayers = item.getList(InitialPlayerAttr);
+      List<String> playersRemaining = item.getList(PlayersRemainingAttr);
       String code = item.getString(CodeAttr);
       String winner = item.getString(WinnerAttr);
     
-      return new Game(id, hostId, location, startTime, initialPlayerCount, playersRemainingCount, code, winner);
+      return new Game(id, hostId, location, startTime, initialPlayers.toArray(new String[initialPlayers.size()]), playersRemaining.toArray(new String[playersRemaining.size()]), code, winner);
     }
     return null;
   }
 
-  public int getGameIdByCode(String code) throws DataAccessException {
+  public String getGameIdByCode(String code) throws DataAccessException {
     Item item = table.getItem(CodeAttr, code);
     if (item != null) {
-      int gameId = item.getInt(IdAttr);
+      String gameId = item.getString(IdAttr);
       return gameId;
     }
-    return 0;
+    return null;
   }
 
-  public boolean checkCodeAvailability(String code) throws DataAccessException {
-    int id = getGameIdByCode(code);
-
-    if (id == 0) {
-      return true;
-    }
-    return false;
-  }
 
   public void insert(Game game) throws DataAccessException {
     Item item = new Item()
             .withPrimaryKey(IdAttr, game.getId())
-            .withInt(HostIdAttr, game.getHostId())
+            .withString(HostIdAttr, game.getHostId())
             .withString(LocationAttr, game.getLocation())
             .withLong(StartTimeAttr, game.getStartTime())
-            .withInt(InitialPlayerAttr, game.getInitialPlayerCount())
-            .withInt(PlayersRemainingAttr, game.getPlayersRemainingCount())
+            .withList(InitialPlayerAttr, game.getInitialPlayerCount())
+            .withList(PlayersRemainingAttr, game.getPlayersRemainingCount())
             .withString(CodeAttr, game.getCode())
             .withString(WinnerAttr, game.getWinner());
     try {
@@ -96,27 +91,49 @@ public class GameDao {
     }
   }
 
-  public void playerJoined(int gameId) throws DataAccessException {
+  public void playerJoined(String gameId, String playerId) throws DataAccessException {
+    HashMap<String, String> nameMap = new HashMap<String, String>();
+    nameMap.put("#initialPlayers", InitialPlayerAttr);
+
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
               .withPrimaryKey(IdAttr, gameId)
-              .withUpdateExpression("set info.initialPlayerCount = info.initialPlayerCount + :val")
-              .withValueMap(new ValueMap().withNumber(":val", 1))
+              .withUpdateExpression("set #initialPlayers = list_append(#initialPlayers, :player)")
+              .withNameMap(nameMap)
+              .withValueMap(new ValueMap().withList(":player", new String[] {playerId}))
               .withReturnValues(ReturnValue.UPDATED_NEW);
               
     try {
       UpdateItemOutcome outcome = table.updateItem(updateItemSpec);
     } catch (Exception e) {
       System.err.println("GameDAO: Unable to update initial player count");
+      System.err.println(e.getMessage());
+    }
+
+    nameMap = new HashMap<String, String>();
+    nameMap.put("#playersRemaining", PlayersRemainingAttr);
+
+    updateItemSpec = new UpdateItemSpec()
+            .withPrimaryKey(IdAttr, gameId)
+            .withUpdateExpression("set #playersRemaining = list_append(#playersRemaining, :player)")
+            .withNameMap(nameMap)
+            .withValueMap(new ValueMap().withList(":player", new String[] {playerId}))
+            .withReturnValues(ReturnValue.UPDATED_NEW);
+
+    try {
+      UpdateItemOutcome outcome = table.updateItem(updateItemSpec);
+    } catch (Exception e) {
+      System.err.println("GameDAO: Unable to update initial player count");
+      System.err.println(e.getMessage());
     }
   }
 
-  public void playerLeftBeforeStart(int gameId) throws DataAccessException {
-    String updateExp = "set " + InitialPlayerAttr + " = " + InitialPlayerAttr + " + :val";
+  public void playerLeftBeforeStart(String gameId, String playerId) throws DataAccessException {
+    String updateExp = "delete " + InitialPlayerAttr + " :player";
 
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
               .withPrimaryKey(IdAttr, gameId)
               .withUpdateExpression(updateExp)
-              .withValueMap(new ValueMap().withNumber(":val", 1))
+              .withValueMap(new ValueMap().withString(":player", playerId))
               .withReturnValues(ReturnValue.UPDATED_NEW);
     
     try {
@@ -126,22 +143,17 @@ public class GameDao {
     }
   }
 
-  public void playerLeftAfterStart(int gameId) throws DataAccessException {
-    playerKilled(gameId);
+  public void playerLeftAfterStart(String gameId, String playerId) throws DataAccessException {
+    playerKilled(gameId, playerId);
   }
 
-  public int setupGame(Game game) throws DataAccessException {
-    insert(game);
-    return getGameIdByCode(game.getCode());
-  }
-
-  public void setHostId(int gameId, int hostId) throws DataAccessException {
+  public void setHostId(String gameId, String hostId) throws DataAccessException {
     String updateExp = "set " + HostIdAttr + " = :val";
     
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
               .withPrimaryKey(IdAttr, gameId)
               .withUpdateExpression(updateExp)
-              .withValueMap(new ValueMap().withNumber(":val", hostId))
+              .withValueMap(new ValueMap().withString(":val", hostId))
               .withReturnValues(ReturnValue.UPDATED_NEW);
 
     try {
@@ -151,9 +163,13 @@ public class GameDao {
     }
   }
 
-  public void startGame(int gameId, int numPlayers) throws DataAccessException {
+  public String[] getAllPlayersInGame(String gameId) throws DataAccessException {
+    Game game = getOne(gameId);
+    return game.getInitialPlayerCount();
+  }
+
+  public void startGame(String gameId, String[] players) throws DataAccessException {
     String updateExp = "set " + StartTimeAttr + " = :startTime, "
-              + InitialPlayerAttr + " = :initialPlayers, "
               + PlayersRemainingAttr + " = :playersRemaining";
     
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
@@ -161,8 +177,7 @@ public class GameDao {
               .withUpdateExpression(updateExp)
               .withValueMap(new ValueMap()
                 .withNumber(":startTime", 1)
-                .withNumber(":initialPlayers", numPlayers)
-                .withNumber(":playersRemaining", numPlayers)
+                .withList(":playersRemaining", players)
               )
               .withReturnValues(ReturnValue.UPDATED_NEW);
     try {
@@ -172,16 +187,17 @@ public class GameDao {
     }
   }
 
-  public int getPlayersRemaining(int gameId) throws DataAccessException {
+  public String[] getPlayersRemaining(String gameId) throws DataAccessException {
     Item item = table.getItem(IdAttr, gameId);
     
     if (item != null) {
-      return item.getInt(PlayersRemainingAttr);
+      List<String> array = item.getList(PlayersRemainingAttr);
+      return array.toArray(new String[array.size()]);
     }
-    return -1;
+    return new String[0];
   }
 
-  public void setWinner(int gameId, String userId) throws DataAccessException {
+  public void setWinner(String gameId, String userId) throws DataAccessException {
     String updateExp = "set " + WinnerAttr + " = :val";
     
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
@@ -197,7 +213,7 @@ public class GameDao {
     }
   }
 
-  public String getWinner(int gameId) throws DataAccessException {
+  public String getWinner(String gameId) throws DataAccessException {
     Item item = table.getItem(IdAttr, gameId);
     
     if (item != null) {
@@ -206,23 +222,29 @@ public class GameDao {
     return null;
   }
 
-  public void playerKilled(int gameId) throws DataAccessException {
-    String updateExp = "set " + PlayersRemainingAttr + " = " + PlayersRemainingAttr + " - :val";
-    
+  public void playerKilled(String gameId, String playerId) throws DataAccessException {
+    ArrayList<String> array = new ArrayList<>(Arrays.asList(getOne(gameId).getPlayersRemainingCount()));
+    array.remove(playerId);
+
+    HashMap<String, String> nameMap = new HashMap<String, String>();
+    nameMap.put("#players", PlayersRemainingAttr);
+
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-              .withPrimaryKey(IdAttr, gameId)
-              .withUpdateExpression(updateExp)
-              .withValueMap(new ValueMap().withNumber(":val", 1))
-              .withReturnValues(ReturnValue.UPDATED_NEW);
+            .withPrimaryKey(IdAttr, gameId)
+            .withUpdateExpression("set #players = :player")
+            .withNameMap(nameMap)
+            .withValueMap(new ValueMap().withList(":player", array.toArray(new String[array.size()])))
+            .withReturnValues(ReturnValue.UPDATED_NEW);
 
     try {
       UpdateItemOutcome outcome = table.updateItem(updateItemSpec);
     } catch (Exception e) {
-      System.err.println("GameDAO: Unable to kill player");
+      System.err.println("GameDAO: Unable to update initial player count");
+      System.err.println(e.getMessage());
     }
   }
 
-  public void delete(int gameId) throws DataAccessException {
+  public void delete(String gameId) throws DataAccessException {
     DeleteItemSpec deleteItemSpec = new DeleteItemSpec() 
               .withPrimaryKey(IdAttr, gameId);
 

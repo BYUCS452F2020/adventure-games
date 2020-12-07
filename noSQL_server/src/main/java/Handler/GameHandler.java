@@ -17,7 +17,7 @@ public class GameHandler extends RequestHandler {
     try {
       if (exchange.getRequestMethod().toUpperCase().equals("GET")) {
         String urlPath = exchange.getRequestURI().toString();
-        int gameId = Integer.parseInt(urlPath.substring(urlPath.lastIndexOf('/') + 1));
+        String gameId = urlPath.substring(urlPath.lastIndexOf('/') + 1);
         result = GameService.getGame(gameId);
       } else {
         message = "{ \"message\": \"error: bad request\" }";

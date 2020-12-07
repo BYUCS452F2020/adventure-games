@@ -1,7 +1,6 @@
 package Service;
 
 import DataAccess.DataAccessException;
-import DataAccess.Database;
 import DataAccess.UserDao;
 import Model.User;
 import Request.LoginRequest;

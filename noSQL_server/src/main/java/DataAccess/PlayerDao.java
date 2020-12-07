@@ -4,32 +4,31 @@ import Model.Player;
 
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.document.DynamoDB;
-import com.amazonaws.services.dynamodbv2.document.Item;
-import com.amazonaws.services.dynamodbv2.document.ItemCollection;
-import com.amazonaws.services.dynamodbv2.document.ScanOutcome;
-import com.amazonaws.services.dynamodbv2.document.Table;
+import com.amazonaws.services.dynamodbv2.document.*;
+import com.amazonaws.services.dynamodbv2.document.spec.QuerySpec;
 import com.amazonaws.services.dynamodbv2.document.spec.UpdateItemSpec;
 import com.amazonaws.services.dynamodbv2.document.utils.ValueMap;
 import com.amazonaws.services.dynamodbv2.document.spec.DeleteItemSpec;
-import com.amazonaws.services.dynamodbv2.document.DeleteItemOutcome;
+import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.QueryRequest;
+import com.amazonaws.services.dynamodbv2.model.QueryResult;
+import org.w3c.dom.Attr;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.Random;
+import javax.management.AttributeValueExp;
+import java.util.*;
 
 public class PlayerDao {
 
   private static final String TableName = "Players";
+
+  private static final String IndexName = "userId-id-index";
 
   private static final String IdAttr = "id";
   private static final String UserIdAttr = "userId";
   private static final String GameAttr = "gameId";
   private static final String KillsAttr = "kills";
   private static final String TargetIdAttr = "targetId";
-  private static final String StatusAttr = "status";
+  private static final String StatusAttr = "gameStatus";
 
   // DynamoDB client
   private static AmazonDynamoDB amazonDynamoDB = AmazonDynamoDBClientBuilder
@@ -39,77 +38,69 @@ public class PlayerDao {
   private static DynamoDB dynamoDB = new DynamoDB(amazonDynamoDB);
   private static Table table = dynamoDB.getTable(TableName);
 
-  public Player getOne(int id) throws DataAccessException {
-    Item item = table.getItem(IdAttr, id);
+  public Player getOne(String id) throws DataAccessException {
+    Item item = table.getItem(IdAttr, id, UserIdAttr, id.substring(0, id.indexOf("_")));
 
     if(item != null) {
-      id = item.getInt(IdAttr);
+      String iD = item.getString(IdAttr);
       String userId = item.getString(UserIdAttr);
-      int gameId = item.getInt(GameAttr);
+      String gameId = item.getString(GameAttr);
       int kills = item.getInt(KillsAttr);
       String targetId = item.getString(TargetIdAttr);
       Boolean status = item.getBoolean(StatusAttr);
 
-      return new Player(id, userId, gameId, kills, targetId, status);
+      return new Player(iD, userId, gameId, kills, targetId, status);
     }
     return null;
   }
 
-  public Player getOne(String userId, int gameId) throws DataAccessException {
+  public Player getOne(String userId, String gameId) throws DataAccessException {
+        Item item = table.getItem(IdAttr, userId + "_" + gameId, UserIdAttr, userId);
 
-        Map<String, Object> expressionAttributeValues = new HashMap<String, Object>();
-        expressionAttributeValues.put(":uId", userId);
-        expressionAttributeValues.put(":gId", gameId);
-
-        ItemCollection<ScanOutcome> items = table.scan("userId = :uId",
-            "gameId = :gId",
-            "id, userId, gameId kills, targetId, status",
-            expressionAttributeValues);
-
-        Iterator<Item> iterator = items.iterator();
-        while (iterator.hasNext()) {
-          int id = iterator.getInt(IdAttr);
-          userId = iterator.getString(UserIdAttr);
-          gameId = iterator.getInt(GameAttr);
-          int kills = iterator.getInt(KillsAttr);
-          String targetId = iterator.getString(TargetIdAttr);
-          Boolean status = iterator.getBoolean(StatusAttr);
+        if(item != null) {
+          String id = item.getString(IdAttr);
+          String user_Id = item.getString(UserIdAttr);
+          String game_Id = item.getString(GameAttr);
+          int kills = item.getInt(KillsAttr);
+          String targetId = item.getString(TargetIdAttr);
+          Boolean status = item.getBoolean(StatusAttr);
     
-          return new Player(id, userId, gameId, kills, targetId, status);
+          return new Player(id, user_Id, game_Id, kills, targetId, status);
         }
         return null;
   }
 
   public Player[] getAll(String username) throws DataAccessException {
-    Player[] players;
     ArrayList<Player> playerArrayList = new ArrayList<>();
-    Map<String, Object> expressionAttributeValues = new HashMap<String, Object>();
-        expressionAttributeValues.put(":uId", username);
+    HashMap<String, String> nameMap = new HashMap<String, String>();
+    nameMap.put("#uId", UserIdAttr);
 
-        ItemCollection<ScanOutcome> items = table.scan("userId = :uId",
-            "id, userId, gameId, kills, targetId, status",
-            expressionAttributeValues);
+    HashMap<String, AttributeValue> valueMap = new HashMap<String, AttributeValue>();
+    valueMap.put(":uId", new AttributeValue().withS(username));
 
-        Iterator<Item> iterator = items.iterator();
-        while (iterator.hasNext()) {
-          int id = iterator.getInt(IdAttr);
-          username = iterator.getString(UserIdAttr);
-          int gameId = iterator.getInt(GameAttr);
-          int kills = iterator.getInt(KillsAttr);
-          String targetId = iterator.getString(TargetIdAttr);
-          Boolean status = iterator.getBoolean(StatusAttr);
-    
-          Player player = new Player(id, username, gameId, kills, targetId, status);
-          playerArrayList.add(player);
-        }
-        players = playerArrayList.toArray(new Player[playerArrayList.size()]);
-        return players;
+    QueryRequest queryRequest = new QueryRequest()
+            .withTableName(TableName)
+            .withIndexName(IndexName)
+            .withKeyConditionExpression("#uId = :uId")
+            .withExpressionAttributeNames(nameMap)
+            .withExpressionAttributeValues(valueMap);
+
+    QueryResult queryResult = amazonDynamoDB.query(queryRequest);
+    List<Map<String, AttributeValue>> items = queryResult.getItems();
+    if (items != null) {
+      for (Map<String, AttributeValue> item : items){
+        Player player = new Player(item.get(IdAttr).getS(), item.get(UserIdAttr).getS(), item.get(GameAttr).getS(), Integer.parseInt(item.get(KillsAttr).getN()), item.get(TargetIdAttr).getS(), item.get(StatusAttr).getBOOL());
+        playerArrayList.add(player);
+      }
+    }
+
+    return playerArrayList.toArray(new Player[playerArrayList.size()]);
   }
 
   public void insert(Player player) throws DataAccessException {
-    int id = player.getPlayerId();
+    String id = player.getPlayerId();
     String userId = player.getUserId();
-    int gameId = player.getGameId();
+    String gameId = player.getGameId();
     int kills = player.getKills();
     String targetId = player.getTargetId();
     Boolean status = player.getStatus();
@@ -118,9 +109,9 @@ public class PlayerDao {
             .withPrimaryKey(IdAttr, id)
             .withString(UserIdAttr, userId)
             .withString(GameAttr, gameId)
-            .withString(KillsAttr, kills)
-            .withInt(TargetIdAttr, targetId)
-            .withInt(StatusAttr, status);
+            .withInt(KillsAttr, kills)
+            .withString(TargetIdAttr, targetId)
+            .withBoolean(StatusAttr, status);
 
     try {
       table.putItem(item);
@@ -130,52 +121,26 @@ public class PlayerDao {
     }
   }
 
-  public Player[] getAllPlayersInGame(int gameId) throws DataAccessException {
-    Player[] players;
-    ArrayList<Player> playerArrayList = new ArrayList<>();
-    Map<String, Object> expressionAttributeValues = new HashMap<String, Object>();
-        expressionAttributeValues.put(":gId", gameId);
-
-        ItemCollection<ScanOutcome> items = table.scan("gameId = :gId",
-            "id, userId, kills, gameId, targetId, status",
-            expressionAttributeValues);
-
-        Iterator<Item> iterator = items.iterator();
-        while (iterator.hasNext()) {
-          int id = iterator.getInt(IdAttr);
-          String userId = iterator.getString(UserIdAttr);
-          gameId = iterator.getInt(GameAttr);
-          int kills = iterator.getInt(KillsAttr);
-          String targetId = iterator.getString(TargetIdAttr);
-          Boolean status = iterator.getBoolean(StatusAttr);
-    
-          Player player = new Player(id, userId, gameId, kills, targetId, status);
-          playerArrayList.add(player);
-        }
-        players = playerArrayList.toArray(new Player[playerArrayList.size()]);
-        return players;
-  }
-
   public int getNextId() throws DataAccessException {
     Random rd = new Random();
     return rd.nextInt();
   }
 
-  public void killPlayer(int playerId) throws DataAccessException {
+  public void killPlayer(String playerId) throws DataAccessException {
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-            .withPrimaryKey(IdAttr, playerId)
-            .withUpdateExpression("set " + StatusAttr + " = :status set" + TargetIdAttr + "=:targetId")
+            .withPrimaryKey(IdAttr, playerId, UserIdAttr, playerId.substring(0, playerId.indexOf("_")))
+            .withUpdateExpression("set " + StatusAttr + " = :status")
             .withValueMap(new ValueMap()
-            .withBoolean(":status", false).withString(":targetId", null));
+            .withBoolean(":status", false));
 
     table.updateItem(updateItemSpec);
   }
 
-  public void updateKills(int playerId) throws DataAccessException {
-    Item item = table.getItem(IdAttr, playerId);
+  public void updateKills(String playerId) throws DataAccessException {
+    Item item = table.getItem(IdAttr, playerId, UserIdAttr, playerId.substring(0, playerId.indexOf("_")));
 
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-            .withPrimaryKey(IdAttr, playerId)
+            .withPrimaryKey(IdAttr, playerId, UserIdAttr, playerId.substring(0, playerId.indexOf("_")))
             .withUpdateExpression("set " + KillsAttr + " = :kills")
             .withValueMap(new ValueMap()
                     .withInt(":kills", item.getInt(KillsAttr) + 1));
@@ -183,69 +148,36 @@ public class PlayerDao {
     table.updateItem(updateItemSpec);
   }
 
-
-  public Player getTarget(String username, int gameId) throws DataAccessException {
-    Map<String, Object> expressionAttributeValues = new HashMap<String, Object>();
-        expressionAttributeValues.put(":uId", username);
-        expressionAttributeValues.put(":gId", gameId);
-
-        ItemCollection<ScanOutcome> items = table.scan("userId = :uId",
-            "gameId = :gId",
-            "id, userId, gameId kills, targetId, status",
-            expressionAttributeValues);
-
-        Iterator<Item> iterator = items.iterator();
-        while (iterator.hasNext()) {
-          int id = iterator.getInt(IdAttr);
-          username = iterator.getString(UserIdAttr);
-          gameId = iterator.getInt(GameAttr);
-          int kills = iterator.getInt(KillsAttr);
-          String targetId = iterator.getString(TargetIdAttr);
-          Boolean status = iterator.getBoolean(StatusAttr);
-    
-          return new Player(id, username, gameId, kills, targetId, status);
-        }
-        return null;
-  }
-
-  public void updateTarget(int playerId, String newTarget) throws DataAccessException {
+  public void updateTarget(String playerId, String newTarget) throws DataAccessException {
     UpdateItemSpec updateItemSpec = new UpdateItemSpec()
-            .withPrimaryKey(IdAttr, playerId)
+            .withPrimaryKey(IdAttr, playerId, UserIdAttr, playerId.substring(0, playerId.indexOf("_")))
             .withUpdateExpression("set " + TargetIdAttr + " = :target")
             .withValueMap(new ValueMap()
-                    .withInt(":target", newTarget));
+                    .withString(":target", newTarget));
 
     table.updateItem(updateItemSpec);
   }
 
-  public Player getAssassin(String targetId, int gameId) throws DataAccessException {
-    Map<String, Object> expressionAttributeValues = new HashMap<String, Object>();
-        expressionAttributeValues.put(":tId", targetId);
-        expressionAttributeValues.put(":gId", gameId);
+  public Player getAssassin(String targetId, String gameId) throws DataAccessException {
+    Item item = table.getItem(TargetIdAttr, targetId, GameAttr, gameId);
 
-        ItemCollection<ScanOutcome> items = table.scan("targetId = :tId",
-            "gameId = :gId",
-            "id, userId, gameId kills, targetId, status",
-            expressionAttributeValues);
+    if(item != null) {
+      String id = item.getString(IdAttr);
+      String userId = item.getString(UserIdAttr);
+      String game_Id = item.getString(GameAttr);
+      int kills = item.getInt(KillsAttr);
+      String target_Id = item.getString(TargetIdAttr);
+      Boolean status = item.getBoolean(StatusAttr);
 
-        Iterator<Item> iterator = items.iterator();
-        while (iterator.hasNext()) {
-          int id = iterator.getInt(IdAttr);
-          String userId = iterator.getString(UserIdAttr);
-          gameId = iterator.getInt(GameAttr);
-          int kills = iterator.getInt(KillsAttr);
-          targetId = iterator.getString(TargetIdAttr);
-          Boolean status = iterator.getBoolean(StatusAttr);
-    
-          return new Player(id, userId, gameId, kills, targetId, status);
-        }
-        return null;
+      return new Player(id, userId, game_Id, kills, target_Id, status);
+    }
+    return null;
   }
 
-  public void delete(int playerId) throws DataAccessException {
+  public void delete(String playerId) throws DataAccessException {
     try {
 
-        DeleteItemSpec deleteItemSpec = new DeleteItemSpec().withPrimaryKey("id", playerId);
+        DeleteItemSpec deleteItemSpec = new DeleteItemSpec().withPrimaryKey(IdAttr, playerId, UserIdAttr, playerId.substring(0, playerId.indexOf("_")));
 
         table.deleteItem(deleteItemSpec);
 
