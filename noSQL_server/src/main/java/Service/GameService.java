@@ -10,8 +10,6 @@ import Request.GameRequest;
 import Result.GameResult;
 import Result.PlayerResult;
 
-import java.sql.Connection;
-
 public class GameService {
   private static int gameCodeLength = 8;
 
@@ -19,25 +17,19 @@ public class GameService {
    * Returns game by gameId
    */
   public static GameResult getGame(int gameId) throws DataAccessException {
-    Database db = new Database();
     try {
-      Connection conn = db.openConnection();
-      db.createTables();
 
-      GameDao gameDao = new GameDao(conn);
+      GameDao gameDao = new GameDao();
       Game game = gameDao.getOne(gameId);
 
       if (game == null) {
-        db.closeConnection(false);
         return new GameResult(false, "no game data associated with id");
       }
 
-      db.closeConnection(true);
 
       return new GameResult(game);
     } catch (Exception e) {
       e.printStackTrace();
-      db.closeConnection(false);
       return new GameResult(false, "error " + e.getMessage());
     }
   }
@@ -51,13 +43,10 @@ public class GameService {
    * Returns game object (including gameId and generated code)
    */
   public static PlayerResult setupGame(GameRequest r) throws Exception {
-    Database db = new Database();
     try {
-      Connection conn = db.openConnection();
-      db.createTables();
 
-      GameDao gameDao = new GameDao(conn);
-      PlayerDao playerDao = new PlayerDao(conn);
+      GameDao gameDao = new GameDao();
+      PlayerDao playerDao = new PlayerDao();
 
       String userId = r.getUsername();
       String location = r.getLocation();
@@ -75,12 +64,9 @@ public class GameService {
       player = playerDao.getOne(userId, gameId);
       gameDao.setHostId(gameId, player.getPlayerId());
 
-      db.closeConnection(true);
-
       return new PlayerResult(player);
     } catch (DataAccessException e) {
       e.printStackTrace();
-      db.closeConnection(false);
       return new PlayerResult(false, "error " + e.getMessage());
     }
   }
@@ -93,11 +79,8 @@ public class GameService {
   public static GameResult startGame(int gameId) throws Exception {
     Database db = new Database();
     try {
-      Connection conn = db.openConnection();
-      db.createTables();
-
-      GameDao gameDao = new GameDao(conn);
-      PlayerDao playerDao = new PlayerDao(conn);
+      GameDao gameDao = new GameDao();
+      PlayerDao playerDao = new PlayerDao();
 
       Player[] players = playerDao.getAllPlayersInGame(gameId);
       Player player;

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="9f996703-bd95-4eb6-9386-c983b9fc8b04" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/DataAccess/DataAccessException.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/DataAccess/DataAccessException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/DataAccess/Database.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/DataAccess/Database.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/DataAccess/GameDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/DataAccess/GameDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/DataAccess/PlayerDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/DataAccess/PlayerDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/DataAccess/UserDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/DataAccess/UserDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/CreateGameHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/CreateGameHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/GameHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/GameHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/JoinGameHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/JoinGameHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/JsonHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/JsonHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/KillTargetHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/KillTargetHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/LeaveGameHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/LeaveGameHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/LoginHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/LoginHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/PlayerHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/PlayerHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/PlayersHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/PlayersHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/RequestHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/RequestHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/StartGameHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/StartGameHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Handler/UserHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Handler/UserHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Model/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Model/Game.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Model/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Model/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Model/User.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Model/User.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Request/GameRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Request/GameRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Request/JoinGameRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Request/JoinGameRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Request/LoginRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Request/LoginRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Request/RegisterRequest.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Request/RegisterRequest.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Result/GameResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Result/GameResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Result/PlayerResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Result/PlayerResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Result/PlayersResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Result/PlayersResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Result/Result.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Result/Result.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Result/UserResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Result/UserResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Server.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Server.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Service/GameService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Service/GameService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Service/PlayerService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Service/PlayerService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Server/target/classes/Service/UserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/Server/target/classes/Service/UserService.class" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1936" />
+    <option name="height" value="1066" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="adventure-games" type="b2602c69:ProjectViewProjectNode" />
+              <item name="adventure-games" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="AndroidSdkUpdater" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="9f996703-bd95-4eb6-9386-c983b9fc8b04" name="Default Changelist" comment="" />
+      <created>1607191483829</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1607191483829</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1066" extended-state="6" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.32982087" />
+      <window_info id="Structure" side_tool="true" />
+      <window_info id="Image Layers" />
+      <window_info id="Designer" />
+      <window_info id="Resources Explorer" />
+      <window_info id="Capture Tool" />
+      <window_info id="Favorites" side_tool="true" />
+      <window_info id="Captures" order="0" weight="0.25" />
+      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="TODO" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="right" id="Capture Analysis" />
+      <window_info anchor="right" id="Theme Preview" />
+      <window_info anchor="right" id="Palette&#9;" />
+    </layout>
+  </component>
+</project>

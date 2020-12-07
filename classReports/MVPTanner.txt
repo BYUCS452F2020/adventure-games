@@ -1,0 +1,8 @@
+	My role was to understand how the front and back ends connected together. I personally 
+helped build all the various HTTP requests to send and receive data between the front and back 
+ends. Overall, I think we have a very simple but functional product. Overall, if we were to
+market and sell, we would probably need to create something with more impressive UI. However, for
+the purposes of this class, it is very functional with a clean, normalized database. 
+	For the presentation, I helped us decided how we would present. We had a discussion about
+what we wanted to show off for our presentation. However, it was fairly simple for one person to 
+present. So instead of having each person step in, we simply had one person do the presentation. 	 
