@@ -56,7 +56,7 @@ public class GameDao {
       String code = item.getString(CodeAttr);
       String winner = item.getString(WinnerAttr);
     
-      return new Game(id, hostId, location, startTime, initialPlayerCount, playersRemainingCount, code, winner))
+      return new Game(id, hostId, location, startTime, initialPlayerCount, playersRemainingCount, code, winner);
     }
     return null;
   }
